@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservation Table</title>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            flex-direction: column; /* Set flex direction to column to stack items vertically */
+            height: 100vh;
+            margin: 0;
+            background-color: #ecf0f1; /* Set a background color for the body */
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 80%; /* Adjust the width as needed */
+            background: linear-gradient(to bottom, #3498db, #1abc9c);
+            color: white; /* Set text color to white for better contrast */
+            margin-top: 20px; /* Add some space between the form and the table */
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #3498db; /* Set header background color to the starting color of the gradient */
+        }
+
+        h2 {
+            text-align: center;
+        }
+        button {
+            background-color: #27ae60; /* Green color for the button */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top:20px;
+        }
+        form {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .view-tickets {
+            background: linear-gradient(to bottom, #3498db, #1abc9c);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2 style="text-align: center;">Welcome {{user}} Your Bookings</h2>
+    <a class="view-tickets" href="/book">book now</a>
+
+<form action="search" method="post">
+    {% csrf_token %}
+    <label for="flightName">Flight Name:</label>
+    <input type="text" id="flightName" name="flightName">
+
+    <label for="fromPlace">From Place:</label>
+    <input type="text" id="fromPlace" name="fromPlace">
+
+    <label for="toPlace">To Place:</label>
+    <input type="text" id="toPlace" name="toPlace">
+
+    <label for="time">Time:</label>
+    <input type="text" id="time" name="time">
+
+    <label for="date">Date:</label>
+    <input type="date" min="{{ yesterday }}" id="date" name="date">
+
+    <button type="submit">Search</button>
+</form>
+<table>
+    <thead>
+        <tr>
+            <th>Filght Name</th>
+            <th>Time</th>
+            <th>From place</th>
+            <th>To place</th>
+            <th>Date</th>
+            <th>Seats Booked</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for i in details %}
+        <tr>
+            <td>{{i.name}}</td>
+            <td>{{i.time}}</td>
+            <td>{{i.fromp}}</td>
+            <td>{{i.top}}</td>
+            <td>{{i.date}}</td>
+            <td>{{i.seats}}</td>
+        </tr>
+        <!-- Add more rows as needed -->
+        {% endfor %}
+    </tbody>
+</table>
+</form>
+<script>
+    // Set the min attribute dynamically using JavaScript
+    var today = new Date().toISOString().split('T')[0];
+    document.getElementById('date').min = today;
+</script>
+</body>
+</html>
