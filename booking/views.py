@@ -53,12 +53,14 @@ def book(request):
         j=0
         for i in id:
             flight=flightdeatils.objects.get(id=i)
-            f4=flightbookings.objects.filter(id=i).exists()
+            f4=flightbookings.objects.filter(refno=flight.refno).exists()
+            print(f4)
             if f4==False:
                 flight2=flightbookings.objects.create(user=user1,refno=flight.refno,name=flight.name,time=flight.time,fromp=flight.fromp,top=flight.top,date=flight.date,seats=d[i])
                 flight2.save()
             else:
-                f3=flightbookings.objects.grt(id=i)
+                f3=flightbookings.objects.get(refno=flight.refno)
+                print(f3)
                 val1=f3.seats
                 setattr(f3,'seats',val1+int(d[i]))
                 f3.save()
@@ -89,8 +91,29 @@ def search(request):
         t=None
     if fp=='':
         fp=None
-    flights=flightdeatils.objects.filter(Q(name=fn) | Q(time=t) | Q(fromp=fp) | Q(top=tp) | Q(date=d)).values()
+    flights=flightbookings.objects.filter(Q(name=fn) | Q(time=t) | Q(fromp=fp) | Q(top=tp) | Q(date=d)).values()
     return render(request,'Bookings.html',{'details':flights})
+
+
+def search2(request):
+    fn=request.POST['flightName']
+    fp=request.POST['fromPlace']
+    tp=request.POST['toPlace']
+    t=request.POST['time']
+    d=request.POST['date']
+    if d=="":
+        d=None
+    if fn=='':
+        fn=None
+    if tp=='':
+        tp=None
+    if t=='':
+        t=None
+    if fp=='':
+        fp=None
+    flights=flightdeatils.objects.filter(Q(name=fn) | Q(time=t) | Q(fromp=fp) | Q(top=tp) | Q(date=d)).values()
+    return render(request,'viewticket.html',{'details':flights})
+
 
 def viewtickets(request):
     global user1
