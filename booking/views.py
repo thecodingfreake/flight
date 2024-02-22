@@ -47,6 +47,8 @@ def book(request):
         global user1
         id=request.POST.getlist('id')
         tic=request.POST.getlist('tickets')
+        print(id)
+        print(tic)
         d={}
         j=0
         for i in tic:
@@ -55,15 +57,17 @@ def book(request):
             d[id[j]]=i
             j+=1
         j=0
+        print(d)
         for i in id:
             flight=flightdeatils.objects.get(id=i)
-            f4=flightbookings.objects.filter(refno=flight.refno).exists()
+            print(flight.refno)
+            f4=flightbookings.objects.filter(Q(refno=flight.refno) & Q(user=user1)).exists()
             print(f4)
             if f4==False:
                 flight2=flightbookings.objects.create(user=user1,refno=flight.refno,name=flight.name,time=flight.time,fromp=flight.fromp,top=flight.top,date=flight.date,seats=d[i])
                 flight2.save()
             else:
-                f3=flightbookings.objects.get(refno=flight.refno)
+                f3=flightbookings.objects.get(Q(refno=flight.refno) & Q(user=user1))
                 print(f3)
                 val1=f3.seats
                 setattr(f3,'seats',val1+int(d[i]))
