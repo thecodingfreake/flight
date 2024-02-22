@@ -14,6 +14,7 @@ def logins(request):
         password=request.POST.get('password')
         user=customer.objects.filter(name=username).values()
         name=user[0]['name']
+        print(user)
         if user[0]['password']==password:
             user1=name
             flights=flightdeatils.objects.all().values()
@@ -21,6 +22,7 @@ def logins(request):
         else:
             return index(request)
     except Exception as e:
+        print(e)
         return index(request)
     
 
@@ -31,11 +33,13 @@ def register(request):
         confirmation=request.POST['confirmation']
         email=request.POST['email']
         names=customer.objects.values_list('name')
+        print(names)
         if name!='' and password==confirmation and name not in names[0]:
             user=customer(name=name,password=password,email=email)
             user.save()
         return render(request,"login.html")
-    except:
+    except Exception as e:
+        print(e)
         return render(request,'login.html')
     
 def book(request):
@@ -91,7 +95,9 @@ def search(request):
         t=None
     if fp=='':
         fp=None
-    flights=flightbookings.objects.filter(Q(name=fn) | Q(time=t) | Q(fromp=fp) | Q(top=tp) | Q(date=d)).values()
+    print(fn,"bookings")
+    flights=flightdeatils.objects.filter(Q(name=fn) | Q(time=t) | Q(fromp=fp) | Q(top=tp) | Q(date=d)).values()
+    print(flights)
     return render(request,'Bookings.html',{'details':flights})
 
 
@@ -111,6 +117,9 @@ def search2(request):
         t=None
     if fp=='':
         fp=None
+    print(fn)
+    fligh=flightbookings.objects.filter(name=fn).values()
+    print(fligh)
     flights=flightdeatils.objects.filter(Q(name=fn) | Q(time=t) | Q(fromp=fp) | Q(top=tp) | Q(date=d)).values()
     return render(request,'viewticket.html',{'details':flights})
 
